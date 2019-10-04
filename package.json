@@ -1,0 +1,16 @@
+{
+  "name": "PAAs-from-SERPs",
+  "version": "1.0.0",
+  "description": "Get PAAs from Google SERPs with Puppeteer",
+  "main": "get_paas.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jan-Philipp Igla",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "puppeteer": "^1.20.0"
+  }
+}
