@@ -1,16 +1,20 @@
 {
-  "name": "PAAs-from-SERPs",
+  "name": "paas-from-serps",
   "version": "1.0.0",
-  "description": "Get PAAs from Google SERPs with Puppeteer",
+  "description": "Get People Also Ask (PAA) questions from Google SERPs with Puppeteer (2019)",
   "main": "get_paas.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Jan-Philipp Igla",
-  "license": "ISC",
+  "author": "Jan-Philipp Igla <hello@jpigla.de> (https://www.jpigla.de)",
+  "license": "GPLv3",
   "dependencies": {
     "minimist": "^1.2.0",
     "puppeteer": "^1.20.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jpigla/PAAs-from-SERPs.git"
   }
 }
