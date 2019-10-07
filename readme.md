@@ -19,7 +19,7 @@
 
 ## Installation
 
-1. Download [Project Release](), extract and (if desired) move folder to your home directory
+1. Download [latest project release](https://github.com/jpigla/PAAs-from-SERPs/releases/latest), extract and (if desired) move folder to your home directory
 2. Check if Node and NPM are already installed. Open Terminal and ...
   * type `node -v` in Terminal to check NodeJS version number (and if installed already)
   * type `npm -v` in Terminal to check NPM-Manager version number (and if installed already)
