@@ -36,10 +36,10 @@
 * _**--output=csv**_ : (optional) to export list of questions
 
 **Examples**
-`node get_paas.js --clicks=max --kw=firefox --output=csv`
-`node get_paas.js --clicks=1 --kw=angela+merkel --output=csv`
-`node get_paas.js --clicks=0 --kw=barack+obama`
-`node get_paas.js --clicks=0 --output=csv --kw=keywords` (_batch mode_)
+* `node get_paas.js --clicks=max --kw=firefox --output=csv`
+* `node get_paas.js --clicks=1 --kw=angela+merkel --output=csv`
+* `node get_paas.js --clicks=0 --kw=barack+obama`
+* `node get_paas.js --clicks=0 --output=csv --kw=keywords` (_batch mode_)
 
 **What happens here**
 
