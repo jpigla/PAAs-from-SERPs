@@ -6,10 +6,17 @@ const fs = require('fs');
 
 let time = new Date().toLocaleString("de-DE",{year: 'numeric', month: '2-digit', day: '2-digit'});
 let timestamp = new Date().getTime();
+let paas_result = new Array();
+let url;
+
+const google_url_de = 'https://www.google.com/search?hl=de&gl=DE&ie=utf-8&oe=utf-8&no_sw_cr=1&pws=0&q=';
+const google_url_us = 'https://www.google.com/search?hl=en&gl=US&ie=utf-8&oe=utf-8&no_sw_cr=1&pws=0&q=';
 
 const keyword = argv.kw;
 const clicks = argv.clicks;
 const output = argv.output;
+const language = argv.lang;
+const help = argv.help;
 
 // ========================== Declare Functions ==========================
 
@@ -23,9 +30,14 @@ const waitFor = (ms) => new Promise(r => setTimeout(r, ms));
 
 async function get_paas(browser,keyword,clicks){
 
-    let url = 'https://www.google.de/search?pws=0&no_sw_cr=1&q='+keyword;
-
-    const page = await browser.newPage();
+    if (language == "en"){
+        url = google_url_us+keyword;
+    } else {
+        url = google_url_de+keyword;
+    }
+    
+    let pages = await browser.pages();
+    const page = pages[0];
 
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36');
     await page.setViewport({
@@ -167,7 +179,7 @@ async function get_paas(browser,keyword,clicks){
         if (questions_with_1_click.length > counter) {
             for(counter; counter < questions_with_1_click.length; counter++) {
                 await questions_with_1_click[counter].click();
-                await page.waitFor(900);
+                await page.waitFor(800);
             };
         }
 
@@ -182,7 +194,7 @@ async function get_paas(browser,keyword,clicks){
         if (questions_with_2_click.length > counter) {
             for(counter; counter < questions_with_2_click.length; counter++) {
                 await questions_with_2_click[counter].click();
-                await page.waitFor(1000);
+                await page.waitFor(800);
             };
         }
 
@@ -197,7 +209,7 @@ async function get_paas(browser,keyword,clicks){
         if (questions_with_3_click.length > counter) {
             for(counter; counter < questions_with_3_click.length; counter++) {
                 await questions_with_3_click[counter].click();
-                await page.waitFor(1100);
+                await page.waitFor(800);
             };
         }
 
@@ -229,71 +241,91 @@ async function get_paas(browser,keyword,clicks){
 
 
 (async function(){
-    
-    let paas_result = new Array();
 
-    await puppeteer.launch({headless: true, args: ['--incognito']}).then(async browser => {
+    if (help) {
+        console.log("\n👨‍🎓 How to use the script.\n");
+        console.log("You can run the script by typing 'npm run scraper' or 'node get_paas.js' followed by arguments.");
+        console.log("Arguments are:");
+        console.log(" ♦ '--clicks=[0-2/max]' : how often click on new questions");
+        console.log(" ♦ '--kw=[...]' : input of keyword (search term) or 'keywords' for batch mode (read line by line from `keywords.txt`)");
+        console.log(" ♦ '--lang=[de/en]' : input of languange");
+        console.log(" ♦ '--output=csv' : (optional) to export list of questions");
+        console.log(" ♦ '--help' : help");
+        console.log("\n📋 Examples:\n");
+        console.log("♦ npm run scraper -- --clicks=0 --kw=angela+merkel --lang=de");
+        console.log("♦ node get_paas.js --clicks=0 --kw=angela+merkel --lang=de\n");
+        console.log("♦ npm run scraper -- --clicks=max --kw=firefox --output=csv --lang=en");
+        console.log("♦ node get_paas.js --clicks=max --kw=firefox --output=csv --lang=en");
+        console.log("\n☀ For further examples or issues go to https://github.com/jpigla/PAAs-from-SERPs.");
+    } else {
+        try {
+            await puppeteer.launch({headless: true}).then(async browser => {
 
-        if (keyword == "keywords") {
-
-            let lineReader = require('readline').createInterface({
-                input: require('fs').createReadStream('keywords.txt')
-            });
-
-            for await (const keywords of lineReader) {
-
-                const result = await get_paas(browser,keywords,clicks);
-                
-                console.log('');
-                paas_result.push('== Search term: '+keywords+' ('+result.count+') ==');
-                await asyncForEach(result.questions, async (question) => {
-                    paas_result.push(question);
-                });
-                paas_result.push('');
-                // paas_result.push('== Number of questions found: '+result.count+' ==');
-
-            };
-
-        } else {
-
-            const result = await get_paas(browser,keyword,clicks);
-            
-            console.log('');
-            paas_result.push('== Search term: '+keyword+' ('+result.count+') ==');
-            await asyncForEach(result.questions, async (question) => {
-                paas_result.push(question);
-            });
-            // paas_result.push('== Number of questions found: '+result.count+' ==');
-
-        }
-
-        paas_result.forEach(question => {
-            console.log(question);
-        });
-
-        if (output == "csv") {
-
-            let csv_output;
-            let csv_filename = 'paas_'+keyword.replace(" ","+")+'_'+timestamp+'.csv';
-
-            paas_result.pop();
-
-            paas_result.forEach(question => {
-                csv_output += decodeURIComponent(question+'\n');
-            });
-
-            csv_output = csv_output.slice(9);
-
-            fs.writeFile(csv_filename, csv_output, 'utf8', function (err) {
-                if (err) {
-                  console.log('Some error occured while trying to save data to CSV!');
-                } else{
-                  console.log('\nData was saved successfully to CSV! ('+csv_filename+')');
+                if (keyword == "keywords") {
+        
+                    let lineReader = require('readline').createInterface({
+                        input: require('fs').createReadStream('keywords.txt')
+                    });
+        
+                    for await (const keywords of lineReader) {
+        
+                        const result = await get_paas(browser,keywords,clicks);
+                        
+                        console.log('');
+                        paas_result.push('== Search term: '+keywords+' ('+result.count+') ==');
+                        await asyncForEach(result.questions, async (question) => {
+                            paas_result.push(question);
+                        });
+                        paas_result.push('');
+                        // paas_result.push('== Number of questions found: '+result.count+' ==');
+        
+                    };
+        
+                } else {
+        
+                    const result = await get_paas(browser,keyword,clicks);
+                    
+                    console.log('');
+                    paas_result.push('== Search term: '+keyword+' ('+result.count+') ==');
+                    await asyncForEach(result.questions, async (question) => {
+                        paas_result.push(question);
+                    });
+                    // paas_result.push('== Number of questions found: '+result.count+' ==');
+        
                 }
-              });
+        
+                paas_result.forEach(question => {
+                    console.log(question);
+                });
+        
+                if (output == "csv") {
+        
+                    let csv_output;
+                    let csv_filename = 'paas_'+keyword.replace(" ","+")+'_'+timestamp+'.csv';
+        
+                    paas_result.pop();
+        
+                    paas_result.forEach(question => {
+                        csv_output += decodeURIComponent(question+'\n');
+                    });
+        
+                    csv_output = csv_output.slice(9);
+        
+                    fs.writeFile(csv_filename, csv_output, 'utf8', function (err) {
+                        if (err) {
+                        console.log('Some error occured while trying to save data to CSV!');
+                        } else{
+                        console.log('\nData was saved successfully to CSV! ('+csv_filename+')');
+                        }
+                    });
+                }
+        
+                await browser.close();
+            });      
+        } catch(e) {
+            console.log(e)
+            process.exit()
         }
-
-        await browser.close();
-    });
+    }
 
 })();
