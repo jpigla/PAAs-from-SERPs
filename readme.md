@@ -29,35 +29,52 @@
 
 ## Usage
 
-**Run script with arguments**
-`node get_paas.js --clicks=X --kw=Y (--output=csv)`
-* **--clicks=X** : number of clicks on new questions (0-2/max) **(be patient when using `max`, ~3min)**
-* **--kw=Y** : input of keyword (search term) or "keywords" for batch mode (read list of keywords from `keywords.txt`)
+**Type `npm run scraper -- --help` for help _(or read on)_.**
+
+**Run script with arguments with one of the following commands**
+* `npm run scraper -- --clicks=[0-2/max] --kw=[...] --lang=[de/en] (--output=csv)`
+* `node get_paas.js --clicks=[0-2/max] --kw=[...] --lang=[de/en] (--output=csv)`
+
+**Arguments**
+* **--clicks=[0-2/max]** : how often click on new questions [0-2/max] **(be patient when using `max`, ~3min)**
+* **--kw=[...]** : input of keyword (search term) or "keywords" for batch mode (read line by line keywords from `keywords.txt`)
+* **--lang=[de/en]** : choose languange of google search [de/en]
 * _**--output=csv**_ : (optional) to export list of questions
 
 **Examples**
-* `node get_paas.js --clicks=max --kw=firefox --output=csv`
-* `node get_paas.js --clicks=1 --kw=angela+merkel --output=csv`
-* `node get_paas.js --clicks=0 --kw=barack+obama`
-* `node get_paas.js --clicks=0 --output=csv --kw=keywords` (_batch mode_)
+* `npm run scraper`
+  * `-- --clicks=max --kw=firefox --output=csv --lang=en`
+  * `-- --clicks=0 --kw=angela+merkel --lang=de`
+  * `-- --clicks=0 --output=csv --kw=keywords --lang=en` (_batch mode_)
+* `node get_paas.js`
+  * `--clicks=max --kw=firefox --output=csv --lang=en`
+  * `--clicks=0 --kw=angela+merkel --lang=de`
+  * `--clicks=0 --output=csv --kw=keywords --lang=en` (_batch mode_)
+
 
 **What happens here**
 
-1. Go to https://www.google.de/search?pws=0&no_sw_cr=1&q=[KEYWORD]
-2. Click on first batch of PAA questions.
-3. Extract all questions from SERP
-4. If `--click` argument is set, click N-times on newly found questions (after click & wait)
-3. Extract all questions from SERP
-4. Output to CLI and CSV file (if csv argument given)
+1. Browser goes to https://www.google.com/search?hl=de&gl=DE&ie=utf-8&oe=utf-8&no_sw_cr=1&pws=0&q=[KEYWORD] (default/de)
+2. If `clicks` is set to `0` initially found questions are returend
+3. If `clicks` is set > `0` then sets of appearing questions (after clicks) are clicked `N` times _(first set = 4 (initial) questions)_
+5. Extract all questions from serp after clicking is done
+6. Output to CLI and CSV file _(if csv argument is given)_
 
 ## Help & Information
 * If something breaks or errors occur during runtime, please ask Philipp at hello@jpigla.de.
 
 ### Changelog
 
+**Version 1.1** (15.10.2019)
+* Add npm script
+* Optimize performance
+* Add `--help` argument
+* Add `--lang` (language) argument [de/en]
+* Edit readme
+
 **Version 1.0** (07.10.2019)
-* Initial Upload
-* Working Version
+* Initial upload
+* Working version
 
 ## License
 
