@@ -16,7 +16,7 @@
   "author": "Jan-Philipp Igla <hello@jpigla.de> (https://www.jpigla.de)",
   "license": "GPLv3",
   "dependencies": {
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "puppeteer": "^1.20.0"
   },
   "repository": {
